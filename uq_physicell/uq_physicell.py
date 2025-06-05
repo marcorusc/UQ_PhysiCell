@@ -334,15 +334,23 @@ def get_rule_index_in_csv(rules: list, key_rules: str) -> int:
     try:
         cell_type, signal, direction, behavior, parameter = key_rules.split(",")
     except ValueError:
-        raise ValueError("Error in rule format: Provide 'cell_type,signal,direction,behavior,parameter' where parameter can be 'saturation', 'half_max', 'hill_power', or 'dead'.")
-    try:
-        for idx, rule in enumerate(rules):
-            if ( (cell_type == rule['cell_type']) and (signal == rule['signal']) and 
-                (direction == rule['direction']) and (behavior == rule['behavior']) and
-                (parameter in ['saturation', 'half_max', 'hill_power', 'dead']) ):
-                return idx
-    except ValueError:
-        raise ValueError(f"Error! Rule {cell_type},{signal},{direction},{behavior} not found or parameter {parameter} does not exist!")
+        raise ValueError(
+            "Error in rule format: Provide 'cell_type,signal,direction,behavior,parameter' where parameter can be 'saturation', 'half_max', 'hill_power', or 'dead'."
+        )
+
+    for idx, rule in enumerate(rules):
+        if (
+            cell_type == rule["cell_type"]
+            and signal == rule["signal"]
+            and direction == rule["direction"]
+            and behavior == rule["behavior"]
+            and parameter in ["saturation", "half_max", "hill_power", "dead"]
+        ):
+            return idx
+
+    raise ValueError(
+        f"Error! Rule {cell_type},{signal},{direction},{behavior} not found or parameter {parameter} does not exist!"
+    )
 
 def generate_csv_file(rules: list, csv_file_out: str, dic_parameters_rules: dict) -> None:
     try:
